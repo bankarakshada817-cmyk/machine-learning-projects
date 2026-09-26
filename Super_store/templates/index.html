@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Outlet Sales Predictor</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #312e81,
+                #4f46e5,
+                #7c3aed
+            );
+
+            padding: 28px 8%;
+            color: white;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .nav-text {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+
+        /* =========================
+           HERO SECTION
+        ========================= */
+
+        .hero {
+            max-width: 1200px;
+            margin: 50px auto 30px;
+            padding: 0 25px;
+
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+
+            color: #111827;
+        }
+
+        .hero-text h1 span {
+            color: #6366f1;
+        }
+
+        .hero-text p {
+            color: #64748b;
+            font-size: 17px;
+            line-height: 1.7;
+            max-width: 600px;
+        }
+
+        .hero-card {
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6
+            );
+
+            border-radius: 25px;
+            padding: 35px;
+
+            color: white;
+
+            box-shadow: 0 15px 35px rgba(99,102,241,0.3);
+        }
+
+        .hero-card .icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .hero-card h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .hero-card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto 70px;
+            padding: 0 25px;
+        }
+
+
+        /* =========================
+           FORM CARD
+        ========================= */
+
+        .form-card {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+
+            box-shadow:
+                0 10px 35px rgba(15,23,42,0.08);
+        }
+
+        .section-title {
+            margin-bottom: 30px;
+        }
+
+        .section-title h2 {
+            font-size: 28px;
+            color: #111827;
+        }
+
+        .section-title p {
+            color: #64748b;
+            margin-top: 7px;
+        }
+
+
+        /* =========================
+           FORM GRID
+        ========================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select {
+
+            padding: 14px 16px;
+
+            border: 1px solid #dbe2ea;
+            border-radius: 12px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            background: #f8fafc;
+
+            transition: 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+
+            border-color: #6366f1;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 3px rgba(99,102,241,0.1);
+        }
+
+
+        /* =========================
+           BUTTON
+        ========================= */
+
+        .button-area {
+            margin-top: 35px;
+        }
+
+        .predict-btn {
+
+            width: 100%;
+
+            padding: 16px;
+
+            border: none;
+
+            border-radius: 14px;
+
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed
+            );
+
+            color: white;
+
+            font-size: 17px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 8px 20px rgba(79,70,229,0.25);
+        }
+
+        .predict-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 25px rgba(79,70,229,0.35);
+        }
+
+
+        /* =========================
+           RESULT
+        ========================= */
+
+        .result {
+
+            margin-top: 30px;
+
+            background: linear-gradient(
+                135deg,
+                #ecfdf5,
+                #d1fae5
+            );
+
+            border: 1px solid #a7f3d0;
+
+            border-radius: 20px;
+
+            padding: 30px;
+
+            text-align: center;
+        }
+
+        .result-title {
+
+            color: #047857;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            margin-bottom: 10px;
+        }
+
+        .prediction {
+
+            font-size: 42px;
+
+            font-weight: 800;
+
+            color: #065f46;
+        }
+
+        .prediction-text {
+
+            margin-top: 5px;
+
+            color: #047857;
+        }
+
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        .error {
+
+            margin-top: 25px;
+
+            padding: 18px;
+
+            background: #fef2f2;
+
+            color: #b91c1c;
+
+            border: 1px solid #fecaca;
+
+            border-radius: 12px;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           FEATURES
+        ========================= */
+
+        .features {
+
+            margin-top: 35px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .feature-card {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 18px;
+
+            text-align: center;
+
+            box-shadow:
+                0 8px 25px rgba(15,23,42,0.06);
+        }
+
+        .feature-icon {
+
+            font-size: 32px;
+
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+
+            font-size: 17px;
+
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+
+            background: #111827;
+
+            color: #cbd5e1;
+
+            text-align: center;
+
+            padding: 25px;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width: 850px) {
+
+            .hero {
+
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text h1 {
+
+                font-size: 38px;
+            }
+
+            .form-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <div class="logo">
+        📊 SalesPredict AI
+    </div>
+
+    <div class="nav-text">
+        Machine Learning • KNN Regression
+    </div>
+
+</header>
+
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+    <div class="hero-text">
+
+        <h1>
+            Predict Your
+            <span>Outlet Sales</span>
+        </h1>
+
+        <p>
+            Enter your product and outlet information
+            to estimate the expected sales using our
+            K-Nearest Neighbors Regression model.
+        </p>
+
+    </div>
+
+
+    <div class="hero-card">
+
+        <div class="icon">
+            🚀
+        </div>
+
+        <h2>
+            Smart Sales Prediction
+        </h2>
+
+        <p>
+            Powered by Machine Learning to help
+            understand and estimate outlet sales
+            based on historical patterns.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<div class="container">
+
+
+    <div class="form-card">
+
+        <div class="section-title">
+
+            <h2>
+                Product & Outlet Information
+            </h2>
+
+            <p>
+                Fill in the details below to generate
+                your sales prediction.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             FORM
+        ========================= -->
+
+        <form action="/predict" method="POST">
+
+
+            <div class="form-grid">
+
+
+                <!-- Item Weight -->
+
+                <div class="form-group">
+
+                    <label>
+                        Item Weight
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="item_weight"
+                        placeholder="Example: 12.5"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Item Visibility -->
+
+                <div class="form-group">
+
+                    <label>
+                        Item Visibility
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.0001"
+                        name="item_visibility"
+                        placeholder="Example: 0.05"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Item MRP -->
+
+                <div class="form-group">
+
+                    <label>
+                        Item MRP
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="item_mrp"
+                        placeholder="Example: 150"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Establishment Year -->
+
+                <div class="form-group">
+
+                    <label>
+                        Outlet Establishment Year
+                    </label>
+
+                    <input
+                        type="number"
+                        name="outlet_establishment_year"
+                        placeholder="Example: 1999"
+                        min="1980"
+                        max="2026"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Fat Content -->
+
+                <div class="form-group">
+
+                    <label>
+                        Item Fat Content
+                    </label>
+
+                    <select
+                        name="item_fat_content"
+                        required
+                    >
+
+                        <option value="">
+                            Select Fat Content
+                        </option>
+
+                        <option value="Low Fat">
+                            Low Fat
+                        </option>
+
+                        <option value="Regular">
+                            Regular
+                        </option>
+
+                        <option value="low fat">
+                            Low fat
+                        </option>
+
+                        <option value="reg">
+                            Regular
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Item Type -->
+
+                <div class="form-group">
+
+                    <label>
+                        Item Type
+                    </label>
+
+                    <select
+                        name="item_type"
+                        required
+                    >
+
+                        <option value="">
+                            Select Item Type
+                        </option>
+
+                        <option value="Breads">
+                            Breads
+                        </option>
+
+                        <option value="Breakfast">
+                            Breakfast
+                        </option>
+
+                        <option value="Canned">
+                            Canned
+                        </option>
+
+                        <option value="Dairy">
+                            Dairy
+                        </option>
+
+                        <option value="Frozen Foods">
+                            Frozen Foods
+                        </option>
+
+                        <option value="Fruits and Vegetables">
+                            Fruits and Vegetables
+                        </option>
+
+                        <option value="Hard Drinks">
+                            Hard Drinks
+                        </option>
+
+                        <option value="Health and Hygiene">
+                            Health and Hygiene
+                        </option>
+
+                        <option value="Household">
+                            Household
+                        </option>
+
+                        <option value="Meat">
+                            Meat
+                        </option>
+
+                        <option value="Others">
+                            Others
+                        </option>
+
+                        <option value="Seafood">
+                            Seafood
+                        </option>
+
+                        <option value="Snack Foods">
+                            Snack Foods
+                        </option>
+
+                        <option value="Soft Drinks">
+                            Soft Drinks
+                        </option>
+
+                        <option value="Starchy Foods">
+                            Starchy Foods
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Outlet Identifier -->
+
+                <div class="form-group">
+
+                    <label>
+                        Outlet Identifier
+                    </label>
+
+                    <select
+                        name="outlet_identifier"
+                        required
+                    >
+
+                        <option value="">
+                            Select Outlet
+                        </option>
+
+                        <option value="OUT013">OUT013</option>
+                        <option value="OUT017">OUT017</option>
+                        <option value="OUT018">OUT018</option>
+                        <option value="OUT019">OUT019</option>
+                        <option value="OUT027">OUT027</option>
+                        <option value="OUT035">OUT035</option>
+                        <option value="OUT045">OUT045</option>
+                        <option value="OUT046">OUT046</option>
+                        <option value="OUT049">OUT049</option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Outlet Size -->
+
+                <div class="form-group">
+
+                    <label>
+                        Outlet Size
+                    </label>
+
+                    <select
+                        name="outlet_size"
+                        required
+                    >
+
+                        <option value="">
+                            Select Size
+                        </option>
+
+                        <option value="Medium">
+                            Medium
+                        </option>
+
+                        <option value="Small">
+                            Small
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Location -->
+
+                <div class="form-group">
+
+                    <label>
+                        Outlet Location
+                    </label>
+
+                    <select
+                        name="outlet_location_type"
+                        required
+                    >
+
+                        <option value="">
+                            Select Location
+                        </option>
+
+                        <option value="Tier 2">
+                            Tier 2
+                        </option>
+
+                        <option value="Tier 3">
+                            Tier 3
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Outlet Type -->
+
+                <div class="form-group">
+
+                    <label>
+                        Outlet Type
+                    </label>
+
+                    <select
+                        name="outlet_type"
+                        required
+                    >
+
+                        <option value="">
+                            Select Outlet Type
+                        </option>
+
+                        <option value="Supermarket Type1">
+                            Supermarket Type 1
+                        </option>
+
+                        <option value="Supermarket Type2">
+                            Supermarket Type 2
+                        </option>
+
+                        <option value="Supermarket Type3">
+                            Supermarket Type 3
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <div class="button-area">
+
+                <button
+                    type="submit"
+                    class="predict-btn"
+                >
+
+                    🔮 Predict Outlet Sales
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+        <!-- =========================
+             RESULT
+        ========================= -->
+
+        {% if prediction %}
+
+        <div class="result">
+
+            <div class="result-title">
+                🎯 Predicted Outlet Sales
+            </div>
+
+            <div class="prediction">
+                ₹ {{ prediction }}
+            </div>
+
+            <div class="prediction-text">
+                Estimated sales based on the
+                provided product and outlet details.
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =========================
+             ERROR
+        ========================= -->
+
+        {% if error %}
+
+        <div class="error">
+
+            ⚠️ {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- =========================
+         FEATURES
+    ========================= -->
+
+    <div class="features">
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🤖
+            </div>
+
+            <h3>
+                Machine Learning
+            </h3>
+
+            <p>
+                Uses KNN Regression to estimate
+                outlet sales.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📈
+            </div>
+
+            <h3>
+                Sales Prediction
+            </h3>
+
+            <p>
+                Get an estimated sales value based
+                on your inputs.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                ⚡
+            </div>
+
+            <h3>
+                Fast & Simple
+            </h3>
+
+            <p>
+                Enter the details and get your
+                prediction instantly.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    © 2026 SalesPredict AI
+    • KNN Regression Project
+    • Built with Python & Flask
+
+</footer>
+
+
+</body>
+
+</html>
