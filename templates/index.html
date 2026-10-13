@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iris Flower Analytics Dashboard</title>
+    <!-- Bootstrap CSS for layout and clean tables -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Crystal-clear background image with a light soft tint */
+        body {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(240, 245, 255, 0.35)), 
+                        url("{{ url_for('static', filename='bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        .main-title {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: #2c3e50;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* Light-colored horizontal navigation bar container */
+        .nav-tabs-container {
+            background-color: rgba(255, 255, 255, 0.80);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            margin-bottom: 25px;
+        }
+
+        .nav-tabs .nav-link {
+            background-color: rgba(255, 255, 255, 0.85);
+            color: #333333;
+            font-weight: 600;
+            border-radius: 8px;
+            margin-right: 10px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #ffffff !important;
+            color: #0b5ed7 !important;
+            border-color: #0b5ed7 !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Highly transparent content card so the flower background shines through vividly */
+        .content-card {
+            background: rgba(255, 255, 255, 0.70);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        /* Form input fields with clean translucency */
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.80);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Banner -->
+        <div class="main-title">
+            <h1>🌸 Iris Flower Classification & Exploratory Dashboard</h1>
+            <p class="text-muted mb-0">Predict Iris species interactively and explore dataset analytics.</p>
+        </div>
+
+        <!-- Horizontal Navigation Tabs -->
+        <div class="nav-tabs-container">
+            <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if active_tab == 'prediction' %}active{% endif %}" id="prediction-tab" data-bs-toggle="tab" data-bs-target="#prediction-pane" type="button" role="tab">✨ Prediction Form</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if active_tab == 'dashboard' %}active{% endif %}" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard-pane" type="button" role="tab">📊 Dashboard Overview</button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="tab-content content-card" id="myTabContent">
+            
+            <!-- TAB 1: PREDICTION FORM (First) -->
+            <div class="tab-pane fade {% if active_tab == 'prediction' %}show active{% endif %}" id="prediction-pane" role="tabpanel">
+                <h3 class="mb-3 text-primary">🔍 Interactive Species Prediction</h3>
+                <p class="text-muted">Input flower measurements below to classify the Iris species using a K-Nearest Neighbors model.</p>
+                
+                <form method="POST" action="/">
+                    <input type="hidden" name="active_tab" value="prediction">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label font-weight-bold">Sepal Length (cm)</label>
+                            <input type="number" step="0.1" class="form-control" name="sepal_length" min="{{ min_sl }}" max="{{ max_sl }}" value="5.1" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-weight-bold">Sepal Width (cm)</label>
+                            <input type="number" step="0.1" class="form-control" name="sepal_width" min="{{ min_sw }}" max="{{ max_sw }}" value="3.5" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-weight-bold">Petal Length (cm)</label>
+                            <input type="number" step="0.1" class="form-control" name="petal_length" min="{{ min_pl }}" max="{{ max_pl }}" value="1.4" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-weight-bold">Petal Width (cm)</label>
+                            <input type="number" step="0.1" class="form-control" name="petal_width" min="{{ min_pw }}" max="{{ max_pw }}" value="0.2" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-4 px-4 py-2">Predict Species 🚀</button>
+                </form>
+
+                {% if prediction %}
+                    <div class="alert alert-success mt-4 fs-5 bg-opacity-75" role="alert">
+                        🎉 The predicted Iris species is: <strong>{{ prediction }}</strong>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- TAB 2: DASHBOARD OVERVIEW (Second) -->
+            <div class="tab-pane fade {% if active_tab == 'dashboard' %}show active{% endif %}" id="dashboard-pane" role="tabpanel">
+                <h3 class="mb-3 text-primary">📊 Dataset Exploratory Data Analysis</h3>
+                <div class="row">
+                    <div class="col-lg-7">
+                        <h5 class="text-secondary">Sample Data Preview</h5>
+                        <div class="table-responsive bg-white bg-opacity-50 p-2 rounded">
+                            {{ sample_data | safe }}
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <h5 class="text-secondary">Species Count Breakdown</h5>
+                        <ul class="list-group">
+                            {% for species, count in species_counts.items() %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-white bg-opacity-75">
+                                    {{ species }}
+                                    <span class="badge bg-primary rounded-pill">{{ count }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const triggerTabList = document.querySelectorAll('#myTab button');
+        triggerTabList.forEach(triggerEl => {
+            const tabTrigger = new bootstrap.Tab(triggerEl);
+            triggerEl.addEventListener('click', event => {
+                event.preventDefault();
+                tabTrigger.show();
+                const target = triggerEl.getAttribute('data-bs-target');
+                document.querySelectorAll('input[name="active_tab"]').forEach(el => {
+                    el.value = target === '#prediction-pane' ? 'prediction' : 'dashboard';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
